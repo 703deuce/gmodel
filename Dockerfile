@@ -13,15 +13,16 @@ RUN apt-get update \
         libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install only what we need on top of vLLM image
+# Install with the Python we run: ensure pip then install so runpod is on sys.path
 COPY requirements-runpod.txt ./
-RUN pip install --no-cache-dir -r requirements-runpod.txt \
-    && find /usr/local/lib -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true \
-    && find /usr/local/lib -name "*.pyc" -delete 2>/dev/null || true \
+RUN /usr/bin/python3 -m ensurepip --default-pip 2>/dev/null || true \
+    && /usr/bin/python3 -m pip install --no-cache-dir -r requirements-runpod.txt \
+    && find /usr/local/lib /usr/lib -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true \
+    && find /usr/local/lib /usr/lib -name "*.pyc" -delete 2>/dev/null || true \
     && rm -rf /root/.cache /tmp/* 2>/dev/null || true
 
 COPY handler.py ./
 
-# Override the image's entrypoint (vllm) so we run handler.py with real Python
+# Override image entrypoint: run handler with same Python we installed into
 ENTRYPOINT ["/usr/bin/python3"]
 CMD ["-u", "handler.py"]
