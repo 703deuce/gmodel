@@ -22,5 +22,6 @@ RUN pip install --no-cache-dir -r requirements-runpod.txt \
 
 COPY handler.py ./
 
-# Use system Python so we run handler.py; image's "python" may be a vllm CLI wrapper
-CMD ["/usr/bin/python3", "-u", "handler.py"]
+# Override the image's entrypoint (vllm) so we run handler.py with real Python
+ENTRYPOINT ["/usr/bin/python3"]
+CMD ["-u", "handler.py"]
