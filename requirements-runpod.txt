@@ -1,0 +1,7 @@
+runpod
+fastapi
+uvicorn[standard]
+# HF + vLLM stack
+transformers @ git+https://github.com/huggingface/transformers.git
+vllm==0.6.2
+accelerate
