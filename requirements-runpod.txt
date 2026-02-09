@@ -1,5 +1,5 @@
 runpod
-# Core HF stack for GLM-OCR (no vLLM)
+# Core HF stack for GLM-OCR (no vLLM) — cache buster: bump to force pip layer rebuild
 torch==2.3.0
 torchvision==0.18.0
 transformers @ git+https://github.com/huggingface/transformers.git
